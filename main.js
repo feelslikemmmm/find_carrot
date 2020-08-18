@@ -1,8 +1,8 @@
 'use strict';
 const CARROT__SIZE = 80;
-const CARROT__COUNT = 5;
-const BUG__COUNT = 6;
-const GAME_DURATION_SEC = 6;
+const CARROT__COUNT = 14;
+const BUG__COUNT = 10;
+const GAME_DURATION_SEC = 10;
 
 const field = document.querySelector('.game__field');
 //field의 크기를 가져오는 함수 getBoundingClientRect
@@ -177,7 +177,7 @@ function addItem(className, count, imgPath){
         const x = randomNumber(x1, x2);
         const y = randomNumber(y1, y2);
         item.style.left = `${x}px`;
-        item.style.right = `${y}px`;
+        item.style.top = `${y}px`;
         field.appendChild(item);
     }
 }
