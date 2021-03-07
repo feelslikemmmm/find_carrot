@@ -1,15 +1,13 @@
 'use strict';
 
 import PopUp from './popup.js';
+import Field from './field.js';
 
-const CARROT__SIZE = 80;
 const CARROT__COUNT = 14;
 const BUG__COUNT = 10;
 const GAME_DURATION_SEC = 10;
 
-const field = document.querySelector('.game__field');
-//field의 크기를 가져오는 함수 getBoundingClientRect
-const fieldRect = field.getBoundingClientRect();
+
 const gameBtn = document.querySelector('.game__button');
 const gameTimer = document.querySelector('.game__timer');
 const gameScore = document.querySelector('.game__score');
@@ -30,7 +28,25 @@ const gameFinishBanner = new PopUp();
 gameFinishBanner.setClickListener(() => {
     startGame();
 })
-field.addEventListener('click', onFieldClick);
+const onItemClick = (item) => {
+    if (!started) {
+        return;
+    }
+    if (item === 'carrot') {
+        //당근!!
+        score++;
+        updateScoreBoard();
+        if (score === CARROT__COUNT) {
+            finishGame(true);
+        }
+    } else if (item === 'bug') {
+        finishGame(false);
+    }
+}
+
+const gameField = new Field(CARROT__COUNT, BUG__COUNT);
+gameField.setClickListener(onItemClick);
+
 
 gameBtn.addEventListener('click', () => {
     if (started) {
@@ -41,7 +57,7 @@ gameBtn.addEventListener('click', () => {
 });
 
 
-function startGame() {
+const startGame = () => {
     started = true;
     initGame();
     showStopButton();
@@ -50,7 +66,7 @@ function startGame() {
     playSound(bgSound);
 }
 
-function stopGame() {
+const stopGame = () => {
     started = false;
     stopGameTimer();
     hideGameButton();
@@ -59,7 +75,7 @@ function stopGame() {
     stopSound(bgSound);
 }
 
-function finishGame(win) {
+const finishGame = (win) => {
     started = false;
     hideGameButton();
     if (win) {
@@ -72,22 +88,22 @@ function finishGame(win) {
     gameFinishBanner.showWithText(win ? 'YOU WON' : 'YOU LOST');
 }
 
-function showStopButton() {
+const showStopButton = () => {
     const icon = gameBtn.querySelector('.fas');
     icon.classList.add('fa-stop');
     icon.classList.remove('fa-play');
 }
 
-function hideGameButton() {
+const hideGameButton = () => {
     gameBtn.style.visibility = 'hidden';
 }
 
-function showTimerAndScore() {
+const showTimerAndScore = () => {
     gameTimer.style.visibility = 'visible';
     gameScore.style.visibility = 'visible';
 }
 
-function startGameTimer() {
+const startGameTimer = () => {
     let remainingTimeSec = GAME_DURATION_SEC;
     updateTimerText(remainingTimeSec);
     timer = setInterval(() => {
@@ -100,77 +116,32 @@ function startGameTimer() {
     }, 1000);
 }
 
-function stopGameTimer() {
+const stopGameTimer = () => {
     clearInterval(timer);
 }
 
-function updateTimerText(time) {
+const updateTimerText = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
     gameTimer.innerText = `${minutes}:${seconds}`;
 }
 
-function onFieldClick() {
-    if (!started) {
-        return;
-    }
-    const target = event.target;
-    if (target.matches('.carrot')) {
-        //당근!!
-        target.remove();
-        score++;
-        playSound(carrotSound);
-        updateScoreBoard();
-        if (score === CARROT__COUNT) {
-            finishGame(true);
-        }
-    } else if (target.matches('.bug')) {
-        stopGameTimer();
-        finishGame(false);
-    }
-}
 
 
-function playSound(sound) {
+const playSound = (sound) => {
     sound.currentTime = 0;
     sound.play();
 }
 
-function stopSound(sound) {
+const stopSound = (sound) => {
     sound.pause();
 }
-function updateScoreBoard() {
+const updateScoreBoard = () => {
     gameScore.innerText = CARROT__COUNT - score;
 }
 
-function initGame() {
+const initGame = () => {
     score = 0;
-    field.innerHTML = '';
     gameScore.innerText = CARROT__COUNT;
-    //벌레와 당근을 생성한 뒤 field에 추가해줌
-    addItem('carrot', CARROT__COUNT, 'img/carrot.png');
-    addItem('bug', BUG__COUNT, 'img/bug.png');
+    gameField.init();
 }
-
-function addItem(className, count, imgPath) {
-    const x1 = 0;
-    const y1 = 0;
-    const x2 = fieldRect.width - CARROT__SIZE;
-    const y2 = fieldRect.height - CARROT__SIZE;
-    for (let i = 0; i < count; i++) {
-        const item = document.createElement('img');
-        item.setAttribute('class', className);
-        item.setAttribute('src', imgPath);
-        item.style.position = 'absolute';
-        const x = randomNumber(x1, x2);
-        const y = randomNumber(y1, y2);
-        item.style.left = `${x}px`;
-        item.style.top = `${y}px`;
-        field.appendChild(item);
-    }
-}
-
-function randomNumber(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
