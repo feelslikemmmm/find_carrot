@@ -2,6 +2,7 @@
 
 import PopUp from './popup.js';
 import Field from './field.js';
+import * as sound from './sound.js';
 
 const CARROT__COUNT = 14;
 const BUG__COUNT = 10;
@@ -12,12 +13,6 @@ const gameBtn = document.querySelector('.game__button');
 const gameTimer = document.querySelector('.game__timer');
 const gameScore = document.querySelector('.game__score');
 
-
-const carrotSound = new Audio('./sound/carrot_pull.mp3');
-const alertSound = new Audio('./sound/alert.wav');
-const bgSound = new Audio('./sound/bg.mp3');
-const bugSound = new Audio('./sound/bug_pull.mp3');
-const winSound = new Audio('./sound/game_win.mp3');
 
 
 let started = false;
@@ -63,7 +58,7 @@ const startGame = () => {
     showStopButton();
     showTimerAndScore();
     startGameTimer();
-    playSound(bgSound);
+    sound.playBackground();
 }
 
 const stopGame = () => {
@@ -71,17 +66,17 @@ const stopGame = () => {
     stopGameTimer();
     hideGameButton();
     gameFinishBanner.showWithText('REPLAY ?')
-    playSound(alertSound);
-    stopSound(bgSound);
+    sound.playAlert();
+    sound.stopBackground();
 }
 
 const finishGame = (win) => {
     started = false;
     hideGameButton();
     if (win) {
-        playSound(winSound);
+        sound.playWin();
     } else {
-        playSound(bugSound);
+        sound.playBug();
     }
     stopGameTimer();
     stopSound(bgSound);
@@ -126,16 +121,6 @@ const updateTimerText = (time) => {
     gameTimer.innerText = `${minutes}:${seconds}`;
 }
 
-
-
-const playSound = (sound) => {
-    sound.currentTime = 0;
-    sound.play();
-}
-
-const stopSound = (sound) => {
-    sound.pause();
-}
 const updateScoreBoard = () => {
     gameScore.innerText = CARROT__COUNT - score;
 }
