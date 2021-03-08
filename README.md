@@ -1,8 +1,8 @@
 # Find Carrot
-
-Front-end : Javascript <br/>
-Deploy : Netlify <br/>
-Role: Front-end <br/>
+https://find-carrot.netlify.app/
+### Front-end : Javascript 
+### Deploy : Netlify 
+### Role: Front-end 
 
 Find Carrot은 Javascript로 제작한 토이 프로젝트 입니다
 
@@ -23,8 +23,8 @@ JS를 통해 DOM요소 컨트롤 및 이벤트 생성
 정해진 시간내에 당근만을 찾아내야합니다
 게임 클리어 혹은 실패시 팝업창이 생성됩니다
 ### Project Includes
-UI Design
-Front-end
-Deploy
+UI Design <br/>
+Front-end <br/>
+Deploy <br/>
 ### Year
 2020 ~ 2021
