@@ -1,6 +1,39 @@
 import * as sound from './sound.js';
 import Field from './field.js';
-export default class Game {
+
+export const Reason = Object.freeze({
+  win: 'win',
+  lose: 'lose',
+  cancel: 'cancel',
+});
+
+//Builder Pattern
+export class GameBuilder {
+  withGameDuration(duration) {
+    this.gameDuration = duration;
+    return this;
+  }
+
+  withCarrotCount(num) {
+    this.carrotCount = num;
+    return this;
+  }
+
+  withBugCount(num) {
+    this.bugCount = num;
+    return this;
+  }
+
+  build() {
+    return new Game(
+      this.gameDuration,
+      this.carrotCount,
+      this.bugCount
+    );
+  }
+}
+
+class Game {
   constructor(gameDuration, carrotCount, bugCount) {
     this.gameDuration = gameDuration;
     this.carrotCount = carrotCount;
@@ -44,7 +77,7 @@ export default class Game {
     this.hideGameButton();
     sound.playAlert();
     sound.stopBackground();
-    this.onGameStop && this.onGameStop('cancel');
+    this.onGameStop && this.onGameStop(Reason.cancel);
   }
 
   finish(win) {
@@ -57,7 +90,7 @@ export default class Game {
     }
     this.stopGameTimer();
     sound.stopBackground();
-    this.onGameStop && this.onGameStop(win ? 'win' : 'lose');
+    this.onGameStop && this.onGameStop(win ? Reason.win : Reason.lose);
   }
 
   onItemClick = item => {
